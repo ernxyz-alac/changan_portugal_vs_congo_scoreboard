@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Portugal vs Congo</title>
     <style>
+
+        :root {
+            --red-color: #E94945;
+            --blue-color: #3C9FD9;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,8 +19,15 @@
         }
 
         @font-face {
-            font-family: 'good-brush';
-            src: url('./fonts/good-brush.ttf');
+            font-family: 'bank-gothic';
+            src: url('./font/bank-gothic.ttf');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'technology-bold';
+            src: url('./font/technology-bold.ttf');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -28,22 +41,29 @@
         }
 
         body {
-            font-family: 'good-brush', Arial, sans-serif;
+            font-family: 'bank-gothic';
         }
 
-        #video {
+        #background-img {
             position: absolute;
             top: 0;
             left: 0;
+            right: 0;
+            bottom: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
             z-index: 0;
+            display: block;
+        }
+
+        #background-img.vertical {
+            object-fit: fill;
         }
 
         #main-container {
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             position: relative;
             overflow: hidden;
         }
@@ -68,118 +88,236 @@
             visibility: visible;
         }
 
-        .live-score-container {
+        /* --- Independent Component Styles --- */
+        .layout-container {
             position: absolute;
             z-index: 2;
-            display: flex;
-            justify-content: center;
-            align-items: baseline;
-            gap: 20px;
             width: 100%;
-            top: 35%;
-            color: white;
-            transition: opacity 0.3s ease;
-            margin-left: -10px;
-        }
-
-        #mainCard {
+            height: 100%;
             display: flex;
             justify-content: center;
-            align-items: baseline;
-        }
-
-        .flag-img {
-            width: 180px;
-            height: auto;
-            object-fit: contain;
-            vertical-align: middle;
-        }
-
-        .score-text {
-            font-size: 180px;
-            font-weight: bold;
-            text-shadow: 4px 4px 10px rgba(0,0,0,0.5);
-            margin: 0 20px;
-        }
-
-        .test-btn {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            z-index: 20;
-            background: rgba(0,0,0,0.7);
+            align-items: center;
             color: white;
-            border: 2px solid #ffd700;
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-size: 14px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
         }
 
-        /* GUAYAQUIL */
-        @media screen and (width: 1920px) {
-            /* Move container */
-            .live-score-container {
-                top: 35%;
-                gap: 0px;
-                margin-left: -20px;
+        .team-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Move horizontally: adjust 'margin' or 'padding' */
+            margin: 0 50px;
+        }
+
+        .time-wrapper {
+            /* Move time component independently */
+        }
+
+        .score-number {
+            font-size: 150px;
+            font-weight: bold;
+            font-family: 'technology-bold';
+            letter-spacing: 15px;
+        }
+
+        .team-name {
+            font-size: 40px;
+            letter-spacing: 3px;
+        }
+
+        .time-text {
+            font-size: 60px;
+        }
+
+        #home-team-wrapper {
+            color: var(--red-color);
+        }
+
+        #away-team-wrapper {
+            color: var(--blue-color);
+        }
+
+        /* --- Independent Positioning Media Queries --- */
+
+        /* Example: Horizontal Screen */
+        @media (orientation: landscape) {
+            #home-team-wrapper {
+                /* Custom horizontal positioning for landscape */
+                position: absolute;
+                left: 19%;
+                top: 46%;
+            }
+            #away-team-wrapper {
+                /* Custom horizontal positioning for landscape */
+                position: absolute;
+                right: 17%;
+                top: 46%;
+            }
+            #time-wrapper {
+                /* Custom horizontal positioning for landscape */
+                position: absolute;
+                top: 61%;
             }
 
-            /* Make flags larger */
-            .flag-img {
-                width: 500px; /* Adjust as needed */
-                height: auto;
-                min-width: 80px;
-            }
-
-            /* Make score text larger */
-            .score-text {
-                font-size: 30rem; /* Or use 64px, 5rem, etc. */
+            .score-number {
+                font-size: 70px;
                 font-weight: bold;
-                text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+                margin-top: -7px;
+            }
+
+            .team-name {
+                font-size: 16px;
+            }
+
+            .time-text {
+                font-size: 16px;
+            }
+        }
+
+        /* Example: Vertical Screen */
+        @media (orientation: portrait) {
+            #home-team-wrapper {
+                /* Custom vertical positioning for portrait */
+                position: absolute;
+                top: 56.5%;
+                left: 3%;
+            }
+            #away-team-wrapper {
+                /* Custom vertical positioning for portrait */
+                position: absolute;
+                top: 56.5%;
+                right: -2%;
+            }
+            #time-wrapper {
+                /* Custom vertical positioning for portrait */
+                position: absolute;
+                top: 66%;
+            }
+
+            .score-number {
+                font-size: 75px;
+                font-weight: bold;
+                margin-top: -5px;
+            }
+
+            .team-name {
+                font-size: 15px;
+            }
+
+            .time-text {
+                font-size: 20px;
+            }
+            .font-size-finalizado-vertical {
+                font-size: 15px;
             }
         }
     </style>
 </head>
 <body>
 <div id="main-container">
-    <video id="video" autoplay muted loop playsinline preload="auto">
-      <source src="./videos/bg.mp4" type="video/mp4">
-    </video>
+    <img id="background-img" src="./img/horizontal/scoreboard.png" alt="Background">
 
-    <!-- Goal Celebration Screen -->
-    <div id="goalScreen" class="goal-screen"></div>
+    <!-- Independent Layout for Score Components -->
+    <div id="score-container" class="layout-container">
+        <!-- Home Team Component -->
+        <div id="home-team-wrapper" class="team-wrapper">
+            <div id="home-name" class="team-name">PORTUGAL</div>
+            <div id="home-score" class="score-number">00</div>
+        </div>
 
-    <!-- Centered Layout -->
-    <div id="mainCard" class="live-score-container">
-        <img id="away-flag" src="https://flagcdn.com/w320/pt.png" class="flag-img" alt="Portugal">
-        <div id="score" class="score-text"><span></span> 0 &nbsp; 0<span></span></div>
-        <img id="home-flag" src="https://flagcdn.com/w320/cd.png" class="flag-img" alt="Congo">
+        <!-- Time Component -->
+        <div id="time-wrapper" class="time-wrapper">
+            <div id="time-text" class="time-text">00:00</div>
+        </div>
+
+        <!-- Away Team Component -->
+        <div id="away-team-wrapper" class="team-wrapper">
+            <div id="away-name" class="team-name">RD CONGO</div>
+            <div id="away-score" class="score-number">00</div>
+        </div>
     </div>
 
     <!-- <button id="testGoalBtn" class="test-btn">🎯 TEST</button> -->
 </div>
 
 <script>
+    /**
+     * Logic for Screen Size and Image Selection:
+     */
+    function updateBackground() {
+        const bgImg = document.getElementById('background-img');
+        const params = new URLSearchParams(window.location.search);
+        const width = parseInt(params.get('width')) || window.innerWidth;
+        const height = parseInt(params.get('height')) || window.innerHeight;
+        
+        let imgSrc = "";
+        // Default to vertical if height > width
+        if (height > width) {
+            imgSrc = "./img/vertical/scoreboard.png";
+            bgImg.classList.add('vertical');
+        } else {
+            imgSrc = "./img/horizontal/scoreboard.png";
+            bgImg.classList.remove('vertical');
+        }
+
+        const absoluteImgPath = new URL(imgSrc, window.location.href).href;
+        
+        if (bgImg.src !== absoluteImgPath) {
+            bgImg.src = imgSrc;
+        }
+    }
+
+    // Initialize background and listen for window size changes
+    updateBackground();
+    window.addEventListener('resize', updateBackground);
+
     const GAME_ID = "portugal_vs_congo";
     const STORAGE_KEY = "portugal_vs_congo_score";
+    const TIME_STORAGE_KEY = "portugal_vs_congo_time";
     
-    // 1. Get saved score for UI display and as the baseline for comparison
+    function formatScore(num) {
+        return num.toString().padStart(2, '0');
+    }
+
+    function updateTimeDisplay(timeValue) {
+        const timeTextElement = document.getElementById("time-text");
+        if (timeValue === "finished") {
+            timeTextElement.textContent = "Finalizado";
+            timeTextElement.classList.add('font-size-finalizado-vertical')
+        } else {
+            // Assume input is like "5'"
+            const minutes = parseInt(timeValue.replace("'", ""));
+            if (!isNaN(minutes)) {
+                timeTextElement.textContent = `${minutes.toString().padStart(2, '0')}:00`;
+            } else {
+                timeTextElement.textContent = timeValue;
+            }
+        }
+    }
+    
+    // 1. Get saved score and time for UI display
     let previousNumbers = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [0, 0];
-    document.getElementById("score").innerHTML = `<span>${previousNumbers[0]}</span> &nbsp <span>${previousNumbers[1]}</span>`;
+    let previousTime = localStorage.getItem(TIME_STORAGE_KEY) || "00'";
+
+    document.getElementById("home-score").textContent = formatScore(previousNumbers[0]);
+    document.getElementById("away-score").textContent = formatScore(previousNumbers[1]);
+    updateTimeDisplay(previousTime);
 
     async function loadData() {
         try {
-            // const res = await fetch("https://doradobet-server.onrender.com/data?gameId=16098411");
-            const res = await fetch("http://localhost:9009/data?gameId=16098411");
+            const res = await fetch("https://doradobet-server.onrender.com/data?gameId=16098411");
+            // const res = await fetch("http://localhost:9009/data?gameId=16098411");
             if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
             
             const data = await res.json();
             
-            // If the score is empty, it means the game might have ended or data is unavailable.
-            // In this case, we don't update the UI or localStorage, keeping the last known values.
+            // Time handling
+            if (data.time && data.time !== previousTime) {
+                previousTime = data.time;
+                localStorage.setItem(TIME_STORAGE_KEY, previousTime);
+                updateTimeDisplay(previousTime);
+            }
+
+            // Score handling
             if (!data.score || data.score.trim() === "") return;
 
             const scoreParts = data.score.split(", ");
@@ -189,10 +327,23 @@
                 const awayScore = parseInt(scoreParts[1].split(" -> ")[1]);
                 const currentNumbers = [homeScore, awayScore];
 
-                // Only update localStorage when a goal has been detected
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(currentNumbers));
-                previousNumbers = currentNumbers;
-                
+                // Update UI and storage if the score changed AND is greater than or equal to previous
+                let shouldUpdate = false;
+                if (currentNumbers[0] >= previousNumbers[0] && currentNumbers[1] >= previousNumbers[1]) {
+                    shouldUpdate = true;
+                }
+
+                if (shouldUpdate && (currentNumbers[0] !== previousNumbers[0] || currentNumbers[1] !== previousNumbers[1])) {
+                    document.getElementById("home-score").textContent = formatScore(currentNumbers[0]);
+                    document.getElementById("away-score").textContent = formatScore(currentNumbers[1]);
+                    
+                    // Save as an array (original logic)
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentNumbers));
+                    // Save as formatted string (requested)
+                    localStorage.setItem(STORAGE_KEY + "_formatted", `${formatScore(currentNumbers[0])}-${formatScore(currentNumbers[1])}`);
+                    
+                    previousNumbers = currentNumbers;
+                }
             }
         } catch (error) { console.error("Error loading data:", error); }
     }
