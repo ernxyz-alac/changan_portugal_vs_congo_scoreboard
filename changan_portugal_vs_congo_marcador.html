@@ -31,17 +31,20 @@
 <body>
     <!-- next time if there's lotta trouble with the res, hardcode that shi -->
     <!-- Update these width/height values to match your billboard screen -->
-    <iframe id="content-iframe" src="https://ernxyz-alac.github.io/changan_portugal_vs_congo_scoreboard/" width="100%"
+    <iframe id="content-iframe" src="./index.html" width="100%"
         frameborder="0"></iframe>
 
     <script>
-        // document.addEventListener('')
-        // Or dynamically set based on screen size
-        const targetWidth = window.screen.width;  // Use screen.width for actual display
-        const targetHeight = window.screen.height;
+        // Update these values to match your billboard screen
+        var targetWidth = window.screen.width;
+        var targetHeight = window.screen.height;
+        var isPortrait = targetHeight > targetWidth;
 
-        document.getElementById('content-iframe').src =
-            `https://ernxyz-alac.github.io/changan_portugal_vs_congo_scoreboard/?width=${targetWidth}&height=${targetHeight}`;
+        // Force the local index.html and pass the screen dimensions
+        var baseUrl = "./index.html";
+        var query = "?width=" + targetWidth + "&height=" + targetHeight + (isPortrait ? "&v=1" : "");
+        
+        document.getElementById('content-iframe').src = baseUrl + query;
     </script>
 </body>
 

@@ -234,19 +234,28 @@
      * Logic for Screen Size and Image Selection:
      */
     function updateBackground() {
-        const bgImg = document.getElementById('background-img');
-        const params = new URLSearchParams(window.location.search);
+        var bgImg = document.getElementById('background-img');
+        var search = window.location.search;
         
-        let width = window.innerWidth;
-        let height = window.innerHeight;
+        var width = window.innerWidth;
+        var height = window.innerHeight;
 
-        // Use query params if available
-        if (params.has('width')) width = parseInt(params.get('width'));
-        if (params.has('height')) height = parseInt(params.get('height'));
+        // Simple param extraction for old browsers (billboards)
+        function getParam(p) {
+            var match = RegExp('[?&]' + p + '=([^&]*)').exec(search);
+            return match && match[1];
+        }
+
+        var qW = getParam('width');
+        var qH = getParam('height');
+        if (qW) width = parseInt(qW);
+        if (qH) height = parseInt(qH);
         
-        let imgSrc = "";
-        // Default to vertical if height > width
-        if (height > width) {
+        // Force vertical if requested via 'v=1' or 'vertical=true' or if screen is portrait
+        var isVertical = (height > width) || (getParam('v') === '1') || (getParam('vertical') === 'true');
+        
+        var imgSrc = "";
+        if (isVertical) {
             imgSrc = "./img/vertical/scoreboard.png";
             bgImg.classList.add('vertical');
             document.body.classList.add('is-portrait');
@@ -258,9 +267,8 @@
             document.body.classList.add('is-landscape');
         }
 
-        const absoluteImgPath = new URL(imgSrc, window.location.href).href;
-        
-        if (bgImg.src !== absoluteImgPath) {
+        // Only update if path changed (avoiding flickering)
+        if (bgImg.src.indexOf(imgSrc.replace('./', '')) === -1) {
             bgImg.src = imgSrc;
         }
     }
