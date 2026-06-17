@@ -38,6 +38,9 @@
             width: 100%;
             overflow: hidden;
             background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         body {
@@ -52,7 +55,7 @@
             bottom: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: fill;
             z-index: 0;
             display: block;
         }
@@ -66,6 +69,7 @@
             height: 100vh;
             position: relative;
             overflow: hidden;
+            background-color: #000;
         }
 
         .goal-screen {
@@ -237,8 +241,8 @@
         var bgImg = document.getElementById('background-img');
         var search = window.location.search;
         
-        var width = window.innerWidth;
-        var height = window.innerHeight;
+        var W = window.innerWidth;
+        var H = window.innerHeight;
 
         // Simple param extraction for old browsers (billboards)
         function getParam(p) {
@@ -248,13 +252,14 @@
 
         var qW = getParam('width');
         var qH = getParam('height');
-        if (qW) width = parseInt(qW);
-        if (qH) height = parseInt(qH);
+        if (qW) W = parseInt(qW);
+        if (qH) H = parseInt(qH);
         
         // Force vertical if requested via 'v=1' or 'vertical=true' or if screen is portrait
-        var isVertical = (height > width) || (getParam('v') === '1') || (getParam('vertical') === 'true');
+        var isVertical = (H > W) || (getParam('v') === '1') || (getParam('vertical') === 'true');
         
         var imgSrc = "";
+        
         if (isVertical) {
             imgSrc = "./img/vertical/scoreboard.png";
             bgImg.classList.add('vertical');
