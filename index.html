@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portugal vs Congo</title>
     <style>
 
@@ -235,10 +235,12 @@
 
 <script>
     /**
-     * Logic for Screen Size and Image Selection:
+     * SELECCIÓN Y ESCALADO DE PLANTILLA
+     * Adapted from known-vertical.html for billboard compatibility
      */
-    function updateBackground() {
+    function applyTemplate() {
         var bgImg = document.getElementById('background-img');
+        var mainContainer = document.getElementById('main-container');
         var search = window.location.search;
         
         var W = window.innerWidth;
@@ -254,12 +256,11 @@
         var qH = getParam('height');
         if (qW) W = parseInt(qW);
         if (qH) H = parseInt(qH);
-        
-        // Force vertical if requested via 'v=1' or 'vertical=true' or if screen is portrait
+
+        // Orientation logic
         var isVertical = (H > W) || (getParam('v') === '1') || (getParam('vertical') === 'true');
-        
+
         var imgSrc = "";
-        
         if (isVertical) {
             imgSrc = "./img/vertical/scoreboard.png";
             bgImg.classList.add('vertical');
@@ -272,15 +273,19 @@
             document.body.classList.add('is-landscape');
         }
 
-        // Only update if path changed (avoiding flickering)
+        // FULL SCREEN STRETCH as requested
+        mainContainer.style.width = W + 'px';
+        mainContainer.style.height = H + 'px';
+
+        // Only update if path changed
         if (bgImg.src.indexOf(imgSrc.replace('./', '')) === -1) {
             bgImg.src = imgSrc;
         }
     }
 
-    // Initialize background and listen for window size changes
-    updateBackground();
-    window.addEventListener('resize', updateBackground);
+    // Initialize template and listen for window size changes
+    applyTemplate();
+    window.addEventListener('resize', applyTemplate);
 
     const GAME_ID = "portugal_vs_congo";
     const STORAGE_KEY = "portugal_vs_congo_score";
