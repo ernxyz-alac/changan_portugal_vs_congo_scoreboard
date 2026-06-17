@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Portugal vs Congo</title>
     <style>
 
@@ -38,9 +38,6 @@
             width: 100%;
             overflow: hidden;
             background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         body {
@@ -55,7 +52,7 @@
             bottom: 0;
             width: 100%;
             height: 100%;
-            object-fit: fill;
+            object-fit: cover;
             z-index: 0;
             display: block;
         }
@@ -69,7 +66,6 @@
             height: 100vh;
             position: relative;
             overflow: hidden;
-            background-color: #000;
         }
 
         .goal-screen {
@@ -143,66 +139,76 @@
         /* --- Independent Positioning Media Queries --- */
 
         /* Example: Horizontal Screen */
-        body.is-landscape #home-team-wrapper {
-            /* Custom horizontal positioning for landscape */
-            position: absolute;
-            left: 19%;
-            top: 46%;
-        }
-        body.is-landscape #away-team-wrapper {
-            /* Custom horizontal positioning for landscape */
-            position: absolute;
-            right: 17%;
-            top: 46%;
-        }
-        body.is-landscape #time-wrapper {
-            /* Custom horizontal positioning for landscape */
-            position: absolute;
-            top: 61%;
-        }
-        body.is-landscape .score-number {
-            font-size: 70px;
-            font-weight: bold;
-            margin-top: -7px;
-        }
-        body.is-landscape .team-name {
-            font-size: 16px;
-        }
-        body.is-landscape .time-text {
-            font-size: 16px;
+        @media (orientation: landscape) {
+            #home-team-wrapper {
+                /* Custom horizontal positioning for landscape */
+                position: absolute;
+                left: 19%;
+                top: 46%;
+            }
+            #away-team-wrapper {
+                /* Custom horizontal positioning for landscape */
+                position: absolute;
+                right: 17%;
+                top: 46%;
+            }
+            #time-wrapper {
+                /* Custom horizontal positioning for landscape */
+                position: absolute;
+                top: 61%;
+            }
+
+            .score-number {
+                font-size: 70px;
+                font-weight: bold;
+                margin-top: -7px;
+            }
+
+            .team-name {
+                font-size: 16px;
+            }
+
+            .time-text {
+                font-size: 16px;
+            }
         }
 
         /* Example: Vertical Screen */
-        body.is-portrait #home-team-wrapper {
-            /* Custom vertical positioning for portrait */
-            position: absolute;
-            top: 56.5%;
-            left: 3%;
-        }
-        body.is-portrait #away-team-wrapper {
-            /* Custom vertical positioning for portrait */
-            position: absolute;
-            top: 56.5%;
-            right: -2%;
-        }
-        body.is-portrait #time-wrapper {
-            /* Custom vertical positioning for portrait */
-            position: absolute;
-            top: 66%;
-        }
-        body.is-portrait .score-number {
-            font-size: 75px;
-            font-weight: bold;
-            margin-top: -5px;
-        }
-        body.is-portrait .team-name {
-            font-size: 15px;
-        }
-        body.is-portrait .time-text {
-            font-size: 20px;
-        }
-        body.is-portrait .font-size-finalizado-vertical {
-            font-size: 15px;
+        @media (orientation: portrait) {
+            #home-team-wrapper {
+                /* Custom vertical positioning for portrait */
+                position: absolute;
+                top: 56.5%;
+                left: 3%;
+            }
+            #away-team-wrapper {
+                /* Custom vertical positioning for portrait */
+                position: absolute;
+                top: 56.5%;
+                right: -2%;
+            }
+            #time-wrapper {
+                /* Custom vertical positioning for portrait */
+                position: absolute;
+                top: 66%;
+            }
+
+            .score-number {
+                font-size: 75px;
+                font-weight: bold;
+                margin-top: -5px;
+            }
+
+            .team-name {
+                font-size: 15px;
+            }
+
+            .time-text {
+                font-size: 20px;
+            }
+            .font-size-finalizado-vertical {
+                font-size: 15px;
+            }
         }
     </style>
 </head>
@@ -235,57 +241,34 @@
 
 <script>
     /**
-     * SELECCIÓN Y ESCALADO DE PLANTILLA
-     * Adapted from known-vertical.html for billboard compatibility
+     * Logic for Screen Size and Image Selection:
      */
-    function applyTemplate() {
-        var bgImg = document.getElementById('background-img');
-        var mainContainer = document.getElementById('main-container');
-        var search = window.location.search;
+    function updateBackground() {
+        const bgImg = document.getElementById('background-img');
+        const params = new URLSearchParams(window.location.search);
+        const width = parseInt(params.get('width')) || window.innerWidth;
+        const height = parseInt(params.get('height')) || window.innerHeight;
         
-        var W = window.innerWidth;
-        var H = window.innerHeight;
-
-        // Simple param extraction for old browsers (billboards)
-        function getParam(p) {
-            var match = RegExp('[?&]' + p + '=([^&]*)').exec(search);
-            return match && match[1];
-        }
-
-        var qW = getParam('width');
-        var qH = getParam('height');
-        if (qW) W = parseInt(qW);
-        if (qH) H = parseInt(qH);
-
-        // Orientation logic
-        var isVertical = (H > W) || (getParam('v') === '1') || (getParam('vertical') === 'true');
-
-        var imgSrc = "";
-        if (isVertical) {
+        let imgSrc = "";
+        // Default to vertical if height > width
+        if (height > width) {
             imgSrc = "./img/vertical/scoreboard.png";
             bgImg.classList.add('vertical');
-            document.body.classList.add('is-portrait');
-            document.body.classList.remove('is-landscape');
         } else {
             imgSrc = "./img/horizontal/scoreboard.png";
             bgImg.classList.remove('vertical');
-            document.body.classList.remove('is-portrait');
-            document.body.classList.add('is-landscape');
         }
 
-        // FULL SCREEN STRETCH as requested
-        mainContainer.style.width = W + 'px';
-        mainContainer.style.height = H + 'px';
-
-        // Only update if path changed
-        if (bgImg.src.indexOf(imgSrc.replace('./', '')) === -1) {
+        const absoluteImgPath = new URL(imgSrc, window.location.href).href;
+        
+        if (bgImg.src !== absoluteImgPath) {
             bgImg.src = imgSrc;
         }
     }
 
-    // Initialize template and listen for window size changes
-    applyTemplate();
-    window.addEventListener('resize', applyTemplate);
+    // Initialize background and listen for window size changes
+    updateBackground();
+    window.addEventListener('resize', updateBackground);
 
     const GAME_ID = "portugal_vs_congo";
     const STORAGE_KEY = "portugal_vs_congo_score";
