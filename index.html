@@ -139,76 +139,66 @@
         /* --- Independent Positioning Media Queries --- */
 
         /* Example: Horizontal Screen */
-        @media (orientation: landscape) {
-            #home-team-wrapper {
-                /* Custom horizontal positioning for landscape */
-                position: absolute;
-                left: 19%;
-                top: 46%;
-            }
-            #away-team-wrapper {
-                /* Custom horizontal positioning for landscape */
-                position: absolute;
-                right: 17%;
-                top: 46%;
-            }
-            #time-wrapper {
-                /* Custom horizontal positioning for landscape */
-                position: absolute;
-                top: 61%;
-            }
-
-            .score-number {
-                font-size: 70px;
-                font-weight: bold;
-                margin-top: -7px;
-            }
-
-            .team-name {
-                font-size: 16px;
-            }
-
-            .time-text {
-                font-size: 16px;
-            }
+        body.is-landscape #home-team-wrapper {
+            /* Custom horizontal positioning for landscape */
+            position: absolute;
+            left: 19%;
+            top: 46%;
+        }
+        body.is-landscape #away-team-wrapper {
+            /* Custom horizontal positioning for landscape */
+            position: absolute;
+            right: 17%;
+            top: 46%;
+        }
+        body.is-landscape #time-wrapper {
+            /* Custom horizontal positioning for landscape */
+            position: absolute;
+            top: 61%;
+        }
+        body.is-landscape .score-number {
+            font-size: 70px;
+            font-weight: bold;
+            margin-top: -7px;
+        }
+        body.is-landscape .team-name {
+            font-size: 16px;
+        }
+        body.is-landscape .time-text {
+            font-size: 16px;
         }
 
         /* Example: Vertical Screen */
-        @media (orientation: portrait) {
-            #home-team-wrapper {
-                /* Custom vertical positioning for portrait */
-                position: absolute;
-                top: 56.5%;
-                left: 3%;
-            }
-            #away-team-wrapper {
-                /* Custom vertical positioning for portrait */
-                position: absolute;
-                top: 56.5%;
-                right: -2%;
-            }
-            #time-wrapper {
-                /* Custom vertical positioning for portrait */
-                position: absolute;
-                top: 66%;
-            }
-
-            .score-number {
-                font-size: 75px;
-                font-weight: bold;
-                margin-top: -5px;
-            }
-
-            .team-name {
-                font-size: 15px;
-            }
-
-            .time-text {
-                font-size: 20px;
-            }
-            .font-size-finalizado-vertical {
-                font-size: 15px;
-            }
+        body.is-portrait #home-team-wrapper {
+            /* Custom vertical positioning for portrait */
+            position: absolute;
+            top: 56.5%;
+            left: 3%;
+        }
+        body.is-portrait #away-team-wrapper {
+            /* Custom vertical positioning for portrait */
+            position: absolute;
+            top: 56.5%;
+            right: -2%;
+        }
+        body.is-portrait #time-wrapper {
+            /* Custom vertical positioning for portrait */
+            position: absolute;
+            top: 66%;
+        }
+        body.is-portrait .score-number {
+            font-size: 75px;
+            font-weight: bold;
+            margin-top: -5px;
+        }
+        body.is-portrait .team-name {
+            font-size: 15px;
+        }
+        body.is-portrait .time-text {
+            font-size: 20px;
+        }
+        body.is-portrait .font-size-finalizado-vertical {
+            font-size: 15px;
         }
     </style>
 </head>
@@ -246,17 +236,26 @@
     function updateBackground() {
         const bgImg = document.getElementById('background-img');
         const params = new URLSearchParams(window.location.search);
-        const width = window.innerWidth;
-        const height = window.innerHeight;
+        
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
+        // Use query params if available
+        if (params.has('width')) width = parseInt(params.get('width'));
+        if (params.has('height')) height = parseInt(params.get('height'));
         
         let imgSrc = "";
         // Default to vertical if height > width
         if (height > width) {
             imgSrc = "./img/vertical/scoreboard.png";
             bgImg.classList.add('vertical');
+            document.body.classList.add('is-portrait');
+            document.body.classList.remove('is-landscape');
         } else {
             imgSrc = "./img/horizontal/scoreboard.png";
             bgImg.classList.remove('vertical');
+            document.body.classList.remove('is-portrait');
+            document.body.classList.add('is-landscape');
         }
 
         const absoluteImgPath = new URL(imgSrc, window.location.href).href;
