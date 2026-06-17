@@ -246,8 +246,8 @@
     function updateBackground() {
         const bgImg = document.getElementById('background-img');
         const params = new URLSearchParams(window.location.search);
-        const width = parseInt(params.get('width')) || window.innerWidth;
-        const height = parseInt(params.get('height')) || window.innerHeight;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
         
         let imgSrc = "";
         // Default to vertical if height > width
